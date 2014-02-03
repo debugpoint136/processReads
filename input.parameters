@@ -1,6 +1,9 @@
 solid.project.name=test_project
-solid.f3.csfasta.name=
-solid.f3.qual.name=
-solid.f5.csfasta.name=
-solid.f5.qual.name=
+solid.f3.csfasta.name=/import/pool2/home/dpuru/general_stuff/reads_demultiplexing/mock.f3.csfasta
+solid.f3.qual.name=/import/pool2/home/dpuru/general_stuff/reads_demultiplexing/mock.f3.qual
+solid.f5.csfasta.name=/import/pool2/home/dpuru/general_stuff/reads_demultiplexing/mock.f5.csfasta
+solid.f5.qual.name=/import/pool2/home/dpuru/general_stuff/reads_demultiplexing/mock.f5.qual
+solid.output.folder=/import/pool2/home/dpuru/general_stuff/reads_demultiplexing/output3
+solid.get.common.headers=yes
+solid.run.demultiplexing=no
 
