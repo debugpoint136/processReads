@@ -180,8 +180,8 @@ awk '{print $2}' nohup.out > jobs.list
 echo "#!/bin/bash" > $tmpfldr/wait.for.grep
 echo "cd $tmpfldr/grep_cmds" >> $tmpfldr/wait.for.grep
 echo "totalchunks=\`ls -1 *_grep.cmd | wc -l\`;" >> $tmpfldr/wait.for.grep
-echo "grepcnt=\`ls -1 *_grep.complete | wc -l\`;" >> $tmpfldr/wait.for.grep
-echo "while [[ \$grepcnt -lt \$totalchunks ]]; do sleep 5m; grepcnt=\`ls -1 *_grep.complete | wc -l\`; done" >> $tmpfldr/wait.for.grep
+echo "grepcnt=\`ls -1 *grep.complete | wc -l\`;" >> $tmpfldr/wait.for.grep
+echo "while [[ \$grepcnt -lt \$totalchunks ]]; do sleep 2s; grepcnt=\`ls -1 *grep.complete | wc -l\`; done" >> $tmpfldr/wait.for.grep
 echo "echo -e \"\$project update : grep completed on farm\n\" | mail dpurushotham136@gmail.com -s \$project : grep completed" >> $tmpfldr/wait.for.grep
 
 bash $tmpfldr/wait.for.grep &
