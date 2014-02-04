@@ -6,4 +6,4 @@ solid.f5.qual.name=/import/pool2/home/dpuru/general_stuff/reads_demultiplexing/m
 solid.output.folder=/import/pool2/home/dpuru/general_stuff/reads_demultiplexing/output3
 solid.get.common.headers=yes
 solid.run.demultiplexing=no
-
+solid.script.common.headers=/import/pool2/home/dpuru/general_stuff/processReads/get_common_headers.py

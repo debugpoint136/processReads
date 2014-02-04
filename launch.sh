@@ -20,6 +20,7 @@ value=`echo $i | awk -F'=' '{print $2}'`
 [[ $key == "solid.output.folder" ]] && output=$value;
 [[ $key == "solid.get.common.headers" ]] && getheaders=$value;
 [[ $key == "solid.run.demultiplexing" ]] && demultiplex=$value;
+[[ $key == "solid.script.common.headers" ]] && pyscript=$value;
 done
 
 #remove all the trailing whitespace from the parsed parameters :-
@@ -29,13 +30,16 @@ f1="${f1%"${f1##*[![:space:]]}"}"
 f2="${f2%"${f2##*[![:space:]]}"}"
 f3="${f3%"${f3##*[![:space:]]}"}"
 f4="${f4%"${f4##*[![:space:]]}"}"
+demultiplex="${demultiplex%"${demultiplex##*[![:space:]]}"}"
+pyscript="${pyscript%"${pyscript##*[![:space:]]}"}"
 
 #check if the output folder exists or not, else create
 tmpfldr=$output/tmp
 chunkflder=$tmpfldr/chunks
+common=$output/common
 [ ! -d $output ] && `mkdir $output`;
 [ ! -d $tmpfldr ] && `mkdir $tmpfldr`;
-
+[ ! -d $common ] && `mkdir $common`;
 [ ! -d $chunkflder ] && `mkdir $chunkflder`;
 
 rm -rf $chunkflder/*
@@ -45,6 +49,10 @@ rm -rf $chunkflder/*
 [[ ! -e $f2 ]] && echo "$f2 file not found. Script aborting..." && exit 1;
 [[ ! -e $f3 ]] && echo "$f3 file not found. Script aborting..." && exit 1;
 [[ ! -e $f4 ]] && echo "$f4 file not found. Script aborting..." && exit 1;
+
+#+---copy files into shared folder :-
+cp $properties $common
+cp $pyscript $common
 
 #get basenames
 
@@ -144,7 +152,10 @@ echo "done" >> $chunkflder/create_master.cmd
 echo "#!/bin/bash" > $tmpfldr/grep_cmds/MASTER_GREP.cmd
 echo "cd $tmpfldr/grep_cmds" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
 echo "for i in \`ls -1 *grep.cmd\`;do" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
-echo "qsub -x \$i" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
+#+----Uncomment qsub line for SGE ----
+#echo "qsub -x \$i" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
+#+----Uncomment qsub line for LSF ----
+echo "bsub bash \$i" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
 echo "done" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
 
 
@@ -182,6 +193,22 @@ echo "cd $tmpfldr/grep_cmds" >> $tmpfldr/wait.for.grep
 echo "totalchunks=\`ls -1 *_grep.cmd | wc -l\`;" >> $tmpfldr/wait.for.grep
 echo "grepcnt=\`ls -1 *grep.complete | wc -l\`;" >> $tmpfldr/wait.for.grep
 echo "while [[ \$grepcnt -lt \$totalchunks ]]; do sleep 2s; grepcnt=\`ls -1 *grep.complete | wc -l\`; done" >> $tmpfldr/wait.for.grep
-echo "echo -e \"\$project update : grep completed on farm\n\" | mail dpurushotham136@gmail.com -s \$project : grep completed" >> $tmpfldr/wait.for.grep
+echo "echo -e \"$project update : grep completed on farm\n\" | mail dpurushotham136@gmail.com -s \"$project:grep completed\"" >> $tmpfldr/wait.for.grep
+echo "bash $tmpfldr/grep_cmds/grep.concat.cmd &" >> $tmpfldr/wait.for.grep
 
-bash $tmpfldr/wait.for.grep &
+#---------post grep steps : ----
+
+echo "#!/bin/bash" > $tmpfldr/grep_cmds/grep.concat.cmd
+echo "cd $tmpfldr/grep_outputs" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "cat f1* > $tmpfldr/f1.headers" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "touch $tmpfldr/f1.headers.ready" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "cat f2* > $tmpfldr/f2.headers" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "touch $tmpfldr/f2.headers.ready" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "cat f3* > $tmpfldr/f3.headers" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "touch $tmpfldr/f3.headers.ready" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "cat f4* > $tmpfldr/f4.headers" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "touch $tmpfldr/f4.headers.ready" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "cd $common" >> $tmpfldr/grep_cmds/grep.concat.cmd
+echo "python get_common_headers.py" >> $tmpfldr/grep_cmds/grep.concat.cmd
+
+bash $tmpfldr/wait.for.grep &>$tmpfldr/wait.log
