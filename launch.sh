@@ -90,7 +90,7 @@ echo "cd $chunkflder/$f1name" >> $chunkflder/f1_GREP.cmd
 echo "for i in \`ls -1\`;do" >> $chunkflder/f1_GREP.cmd
 echo "echo \"#!/bin/bash\" > $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f1_GREP.cmd
 echo "echo \"grep \\\">\\\" $chunkflder/$f1name/\$i > $tmpfldr/grep_outputs/\${i}_headers\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f1_GREP.cmd
-echo "echo \"touch \$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f1_GREP.cmd
+echo "echo \"touch $tmpfldr/grep_cmds/\$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f1_GREP.cmd
 echo "done" >> $chunkflder/f1_GREP.cmd
 
 cd $chunkflder/$f2name
@@ -102,7 +102,7 @@ echo "cd $chunkflder/$f2name" >> $chunkflder/f2_GREP.cmd
 echo "for i in \`ls -1\`;do" >> $chunkflder/f2_GREP.cmd
 echo "echo \"#!/bin/bash\" > $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f2_GREP.cmd
 echo "echo \"grep \\\">\\\" $chunkflder/$f2name/\$i > $tmpfldr/grep_outputs/\${i}_headers\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f2_GREP.cmd
-echo "echo \"touch \$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f2_GREP.cmd
+echo "echo \"touch $tmpfldr/grep_cmds/\$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f2_GREP.cmd
 echo "done" >> $chunkflder/f2_GREP.cmd
 
 cd $chunkflder/$f3name
@@ -114,7 +114,7 @@ echo "cd $chunkflder/$f3name" >> $chunkflder/f3_GREP.cmd
 echo "for i in \`ls -1\`;do" >> $chunkflder/f3_GREP.cmd
 echo "echo \"#!/bin/bash\" > $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f3_GREP.cmd
 echo "echo \"grep \\\">\\\" $chunkflder/$f3name/\$i > $tmpfldr/grep_outputs/\${i}_headers\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f3_GREP.cmd
-echo "echo \"touch \$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f3_GREP.cmd
+echo "echo \"touch $tmpfldr/grep_cmds/\$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f3_GREP.cmd
 echo "done" >> $chunkflder/f3_GREP.cmd
 
 
@@ -127,7 +127,7 @@ echo "cd $chunkflder/$f4name" >> $chunkflder/f4_GREP.cmd
 echo "for i in \`ls -1\`;do" >> $chunkflder/f4_GREP.cmd
 echo "echo \"#!/bin/bash\" > $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f4_GREP.cmd
 echo "echo \"grep \\\">\\\" $chunkflder/$f4name/\$i > $tmpfldr/grep_outputs/\${i}_headers\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f4_GREP.cmd
-echo "echo \"touch \$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f4_GREP.cmd
+echo "echo \"touch $tmpfldr/grep_cmds/\$i.grep.complete\" >> $tmpfldr/grep_cmds/\${i}_grep.cmd" >> $chunkflder/f4_GREP.cmd
 echo "done" >> $chunkflder/f4_GREP.cmd
 
 # exec intermediary scripts : -
@@ -144,7 +144,7 @@ echo "done" >> $chunkflder/create_master.cmd
 echo "#!/bin/bash" > $tmpfldr/grep_cmds/MASTER_GREP.cmd
 echo "cd $tmpfldr/grep_cmds" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
 echo "for i in \`ls -1 *grep.cmd\`;do" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
-echo "bsub bash \$i" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
+echo "qsub -x \$i" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
 echo "done" >> $tmpfldr/grep_cmds/MASTER_GREP.cmd
 
 
